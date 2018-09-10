@@ -8,8 +8,10 @@ import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,20 +31,17 @@ public class VechileController {
 	@Autowired
 	private CustomerServiceProxy proxy;
 
-	@GetMapping("/vechile/{vechileId}")
-	public Vechile retrieveVechileById(@PathVariable Long vechileId) {
+	@GetMapping("/vechile")
+	public ResponseEntity<Vechile> retrieveVechileById(@RequestParam Long vechileId) {
 
-		Optional<Vechile> exchangeValue = repository.findById(vechileId);
+		Optional<Vechile> vechile = repository.findById(vechileId);
 
-		return exchangeValue.orElse(new Vechile(1001L, "default", "REG_num", 1L, "Disconnected"));
-	}
+		if (vechile.isPresent()) {
+			return ResponseEntity.ok().body(vechile.get());
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 
-	@GetMapping("/vechile/bean/{vechileId}")
-	public VechileBean retrieveVechileBeanById(@PathVariable Long vechileId) {
-
-		// Optional<Vechile> exchangeValue = repository.findById(vechileId);
-
-		return new VechileBean();
 	}
 
 	@RequestMapping(value = "/updateVechile", method = RequestMethod.POST)
@@ -54,11 +54,28 @@ public class VechileController {
 			updatedObject.setStatus(vechile.getStatus());
 			repository.save(updatedObject);
 		} else {
-			System.out.println("not found");
+			return Response.status(Status.NOT_FOUND).entity("Object not found").build();
 			// handle not found
 		}
 
 		return Response.ok("success").build();
+	}
+	
+	@RequestMapping(value = "/updateVechileEntity", method = RequestMethod.POST)
+	public ResponseEntity<Vechile> updateVechileStatus(@RequestBody VechileBean vechile) {
+
+		Optional<Vechile> objectToUpdate = repository.findById(Long.valueOf(vechile.getVechileId()));
+		Vechile updatedObject;
+		if (objectToUpdate.isPresent()) {
+			updatedObject = objectToUpdate.get();
+			updatedObject.setStatus(vechile.getStatus());
+			repository.save(updatedObject);
+		} else {
+			return ResponseEntity.notFound().build();
+			// handle not found
+		}
+
+		return ResponseEntity.ok().body(updatedObject);
 	}
 
 	@GetMapping("/vechiles")
