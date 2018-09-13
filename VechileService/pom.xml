@@ -165,9 +165,9 @@
 		        <artifactId>maven-compiler-plugin</artifactId>
 		        <version>3.8.0</version>
 		        <configuration>
-		          <fork>true</fork>
-		          <executable>C:\Program Files (x86)\Java\jdk1.8.0_161\bin\javac.exe</executable>
-		        </configuration>
+          			<source>1.8</source>
+          			<target>1.8</target>
+        		</configuration>
       		</plugin>
 			
 		</plugins>
