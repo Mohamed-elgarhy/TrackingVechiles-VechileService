@@ -127,16 +127,18 @@
     <groupId>net.minidev</groupId>
     <artifactId>json-smart</artifactId>
     <version>2.3</version>
-</dependency>
+</dependency>	
 	
 <dependency>
-    <groupId>javax</groupId>
-    <artifactId>javaee-web-api</artifactId>
-    <version>6.0</version>
-    <scope>provided</scope>
-</dependency>	
-		
-		
+    <groupId>javax.ws.rs</groupId>
+    <artifactId>javax.ws.rs-api</artifactId>
+    <version>2.0</version>
+</dependency>
+		<dependency>
+    <groupId>javax.mail</groupId>
+    <artifactId>mail</artifactId>
+    <version>1.4</version>
+</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -157,6 +159,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-compiler-plugin</artifactId>
+		        <version>3.8.0</version>
+		        <configuration>
+		          <fork>true</fork>
+		          <executable>C:\Program Files (x86)\Java\jdk1.8.0_161\bin\javac.exe</executable>
+		        </configuration>
+      		</plugin>
+			
 		</plugins>
 	</build>
 
