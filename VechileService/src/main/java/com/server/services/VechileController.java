@@ -1,5 +1,6 @@
 package com.server.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.server.services.constants.ValidatorConstants;
+import com.server.services.validators.BeansValidator;
 
 @RestController
 public class VechileController {
@@ -40,9 +44,22 @@ public class VechileController {
 
 	}
 
-	@RequestMapping(value = "/updateVechile", method = RequestMethod.POST)
+	@RequestMapping(value = "/vechile/update/status", method = RequestMethod.POST)
 	public Response updateStatus(@RequestBody VechileBean vechile) {
 
+		// validate the bean
+		Short result = BeansValidator.validateVechileBeanForStatusUpdate(vechile);
+		
+		if (result == ValidatorConstants.EMPTY_STATUS_NOT_ALLOWED)
+		{
+			return Response.notModified().status(Status.BAD_REQUEST).entity("status can not be empty").build();
+		}
+		if (result == ValidatorConstants.EMPTY_VECHILE_ID_NOT_ALLOWED)
+		{
+			return Response.notModified().status(Status.BAD_REQUEST).entity("vechile id can not be empty").build();
+		}
+		
+		
 		Optional<Vechile> objectToUpdate = repository.findById(Long.valueOf(vechile.getVechileId()));
 
 		if (objectToUpdate.isPresent()) {
@@ -56,7 +73,7 @@ public class VechileController {
 
 		return Response.ok("success").build();
 	}
-	
+
 	@RequestMapping(value = "/updateVechileEntity", method = RequestMethod.POST)
 	public ResponseEntity<Vechile> updateVechileStatus(@RequestBody VechileBean vechile) {
 
@@ -80,17 +97,27 @@ public class VechileController {
 
 		List<CustomerDataBean> customerDataList = proxy.retrieveVechileBeanList();
 
-		Map<Long, Object> cutomerMap = customerDataList.stream()
-				.collect(Collectors.toMap(CustomerDataBean::getId, item -> item));
+		Map<Long, Object> cutomerMap;
+		if (!customerDataList.isEmpty()) {
+			cutomerMap = customerDataList.stream().collect(Collectors.toMap(CustomerDataBean::getId, item -> item));
+		} else {
+			return new ArrayList<>();
+		}
 
 		List<Vechile> vechiles = repository.findAll();
 
-		List<VechileBean> result = vechiles.stream()
-				.map(item -> new VechileBean(item.getVechileId(),
-						((CustomerDataBean) cutomerMap.get(item.getOwnerCustomerId())).getCustomerName(),
-						item.getStatus(), item.getRegisterationNumber(),
-						((CustomerDataBean) cutomerMap.get(item.getOwnerCustomerId())).getCustomerAddress()))
-				.collect(Collectors.toList());
+		List<VechileBean> result = new ArrayList<>();
+		if (!vechiles.isEmpty()) {
+			result = vechiles.stream().filter(item ->
+
+			cutomerMap.get(item.getOwnerCustomerId()) != null)
+					.map(item -> new VechileBean(item.getVechileId(),
+							((CustomerDataBean) cutomerMap.get(item.getOwnerCustomerId())).getCustomerName(),
+							item.getStatus(), item.getRegisterationNumber(),
+							((CustomerDataBean) cutomerMap.get(item.getOwnerCustomerId())).getCustomerAddress()))
+					.collect(Collectors.toList());
+
+		}
 
 		return result;
 	}
