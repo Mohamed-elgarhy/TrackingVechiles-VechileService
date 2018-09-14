@@ -2,51 +2,20 @@ package com.server.services;
 
 public class CustomerDataBean {
 
-	
 	private Long id;
 
-	
 	private String customerName;
-	
 
 	private String customerAddress;
 
-
 	public CustomerDataBean() {
-
+		//TO-DO implement when needed 
 	}
-
-
-	public Long getId() {
-		return id;
-	}
-
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-	public String getCustomerName() {
-		return customerName;
-	}
-
-
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-
-
-	public String getCustomerAddress() {
-		return customerAddress;
-	}
-
-
-	public void setCustomerAddress(String customerAddress) {
-		this.customerAddress = customerAddress;
-	}
-
-
+	/**
+	 * @param id - customer id which is unique for every customer
+	 * @param customerName - full customer name as string
+	 * @param customerAddress - full customer address as string
+	 */
 	public CustomerDataBean(Long id, String customerName, String customerAddress) {
 		super();
 		this.id = id;
@@ -54,12 +23,36 @@ public class CustomerDataBean {
 		this.customerAddress = customerAddress;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerAddress() {
+		return customerAddress;
+	}
+
+	public void setCustomerAddress(String customerAddress) {
+		this.customerAddress = customerAddress;
+	}
+
+	
 
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", customerName=" + customerName + ", customerAddress=" + customerAddress + "]";
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -70,7 +63,6 @@ public class CustomerDataBean {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -98,13 +90,5 @@ public class CustomerDataBean {
 			return false;
 		return true;
 	}
-
-	
-	
-	
-	
-
-
-	
 
 }

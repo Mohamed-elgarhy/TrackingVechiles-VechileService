@@ -31,6 +31,10 @@ public class VechileController {
 	@Autowired
 	private CustomerServiceProxy proxy;
 
+	/**
+	 * @param vechileId - Identifier for the vechile to be fetched and returned
+	 * @return Response Entity of type Vechile
+	 */
 	@GetMapping("/vechile")
 	public ResponseEntity<Vechile> retrieveVechileById(@RequestParam Long vechileId) {
 
@@ -44,6 +48,10 @@ public class VechileController {
 
 	}
 
+	/**
+	 * @param vechile - object of type VechileBean should at least contaian vechile id and status as JSON
+	 * @return Response 
+	 */
 	@RequestMapping(value = "/vechile/update/status", method = RequestMethod.POST)
 	public Response updateStatus(@RequestBody VechileBean vechile) {
 
@@ -91,8 +99,14 @@ public class VechileController {
 		return ResponseEntity.ok().body(updatedObject);
 	}
 
+	/**
+	 * This function retrieves customer list (through customer service) and vechile list 
+	 * then find intersection between the two lists to return.
+	 * 
+	 * @return List<VechileBean> 
+	 */
 	@GetMapping("/vechiles")
-	@CrossOrigin(origins = "http://localhost:4200")
+	@CrossOrigin(origins = "http://localhost:4200") // this is to allow connections from Angular on 4200 port
 	public List<VechileBean> retrieveVechileBeanList() {
 
 		List<CustomerDataBean> customerDataList = proxy.retrieveVechileBeanList();

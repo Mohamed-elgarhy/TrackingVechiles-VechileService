@@ -2,7 +2,15 @@ package com.server.services.validators;
 
 import com.server.services.VechileBean;
 import com.server.services.constants.ValidatorConstants;
-// can use bean validator but need more time
+
+/**
+ * @author mkader3
+ *
+ *This class handles beans validation centrally to avoid code repeating 
+ *
+ * can use bean validator JSR but need more time
+ *
+ */
 public class BeansValidator {
 
 	private BeansValidator() {
