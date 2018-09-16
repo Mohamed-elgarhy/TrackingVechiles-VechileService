@@ -44,80 +44,67 @@ public class TestUpdateVechile {
 	@Mock
 	CustomerServiceProxy customerServiceProxy;
 
-	
 	@Before
-    public void setUp(){
-        MockitoAnnotations.initMocks(this);
-    }
-	
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+	}
+
 	@Test
-    public void shouldUpdateCustomerStatusSuccessfully() throws Exception {
-		
+	public void shouldUpdateVehicleStatusSuccessfully() throws Exception {
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.accumulate("vechileId", "10002");
 		jsonObject.accumulate("status", "DisConn");
-		
-		
-        this.mvc.perform(post("/vechile/update/status").accept(MediaType.APPLICATION_JSON).content(jsonObject.toString()).contentType(MediaType.APPLICATION_JSON)
-        		).andDo(print()).andExpect(status().isOk());
-        
-        this.mvc.perform(get("/vechile").param("vechileId", "10002")).andDo(print()).andExpect(status().isOk())
-        .andExpect(jsonPath("$.status", containsString("DisConn")));
-        
-        
-    }
-	
+
+		this.mvc.perform(post("/vechile/update/status").accept(MediaType.APPLICATION_JSON)
+				.content(jsonObject.toString()).contentType(MediaType.APPLICATION_JSON)).andDo(print())
+				.andExpect(status().isOk());
+
+		this.mvc.perform(get("/vechile").param("vechileId", "10002")).andDo(print()).andExpect(status().isOk())
+				.andExpect(jsonPath("$.status", containsString("DisConn")));
+
+	}
+
 	@Test
-    public void shouldReturnUnsupportedTypeStatus() throws Exception {
-		
+	public void shouldReturnUnsupportedTypeStatus() throws Exception {
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.accumulate("vechileId", "10002");
 		jsonObject.accumulate("status", "DisConn");
-		
-		
-        this.mvc.perform(post("/vechile/update/status").accept(MediaType.APPLICATION_JSON).content(jsonObject.toString())
-        		).andDo(print()).andExpect(status().isUnsupportedMediaType());
-        
-        
-        
-        
-        
-    }
-	
+
+		this.mvc.perform(
+				post("/vechile/update/status").accept(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
+				.andDo(print()).andExpect(status().isUnsupportedMediaType());
+
+	}
+
 	@Test
-    public void shouldReturnErrorWithCode400AndErrorMsg() throws Exception {
-		
+	public void shouldReturnErrorWithCode400AndErrorMsg() throws Exception {
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.accumulate("vechileId", "10002");
 		jsonObject.accumulate("statas", "DisConn");
-		
-		
-        this.mvc.perform(post("/vechile/update/status").accept(MediaType.APPLICATION_JSON).content(jsonObject.toString()).contentType(MediaType.APPLICATION_JSON)
-        		).andDo(print()).andExpect(status().isOk())
-        .andExpect(jsonPath("$.entity", containsString("status can not be empty")))
-        .andExpect(jsonPath("$.status", is(400)))        ;
-        
-      
-        
-    }
-	
+
+		this.mvc.perform(post("/vechile/update/status").accept(MediaType.APPLICATION_JSON)
+				.content(jsonObject.toString()).contentType(MediaType.APPLICATION_JSON)).andDo(print())
+				.andExpect(status().isOk()).andExpect(jsonPath("$.entity", containsString("status can not be empty")))
+				.andExpect(jsonPath("$.status", is(400)));
+
+	}
+
 	@Test
-    public void shouldReturnErrorWithCode400AndErrorMsgForId() throws Exception {
-		
+	public void shouldReturnErrorWithCode400AndErrorMsgForId() throws Exception {
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.accumulate("vechileId2", "10002");
 		jsonObject.accumulate("status", "DisConn");
-		
-		
-        this.mvc.perform(post("/vechile/update/status").accept(MediaType.APPLICATION_JSON).content(jsonObject.toString()).contentType(MediaType.APPLICATION_JSON)
-        		).andDo(print()).andExpect(status().isOk())
-        .andExpect(jsonPath("$.entity", containsString("vechile id can not be empty")))
-        .andExpect(jsonPath("$.status", is(400)))        ;
-        
-      
-        
-    }
-	
-	
+
+		this.mvc.perform(post("/vechile/update/status").accept(MediaType.APPLICATION_JSON)
+				.content(jsonObject.toString()).contentType(MediaType.APPLICATION_JSON)).andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.entity", containsString("vechile id can not be empty")))
+				.andExpect(jsonPath("$.status", is(400)));
+
+	}
 
 }
